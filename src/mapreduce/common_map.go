@@ -4,9 +4,9 @@ import (
 	"hash/fnv"
 	"io/ioutil"
 	"log"
+	"encoding/json"
 	"os"
 	"fmt"
-	"encoding/json"
 )
 
 
@@ -64,24 +64,24 @@ func doMap(
 		}
 
 	variable := string(content)
-	r := ihash(variable) % nReduce
-	outfile := reduceName(jobName, mapTask, r)
-	result := mapF(outfile, variable)
-	fmt.Printf("\nResult: %s", outfile)
-	fmt.Printf("\n")
-	w, er := os.Create(outfile)
-	if er != nil {
-		panic(er)
-	}
-	enc := json.NewEncoder(w)
+	result := mapF(inFile, variable)
+
 	for _, kv := range result {
-	  err := enc.Encode(&kv)
+		r := ihash(kv.Key) % nReduce
+		outfile := reduceName(jobName, mapTask, r)
+		w, err := os.OpenFile(outfile, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0755)
 		if err != nil {
 			panic(err)
 		}
+			enc := json.NewEncoder(w)
+		  Encerr := enc.Encode(&kv)
+			if Encerr != nil {
+				fmt.Printf("\n Encoding Error")
+				panic(Encerr)
+			}
+			w.Close()
+		}
 	}
-	w.Close()
-}
 
 func ihash(s string) int {
 	h := fnv.New32a()
