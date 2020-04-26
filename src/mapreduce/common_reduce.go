@@ -1,11 +1,11 @@
 package mapreduce
 
 import (
-	"hash/fnv"
-	"io/ioutil"
+	//"hash/fnv"
+	"os"
 	"log"
-	"decoding/json"
-	"fmt"
+	"encoding/json"
+	"sort"
 )
 
 func doReduce(
@@ -52,22 +52,80 @@ func doReduce(
 	//
 	// Your code here (Part I).
 	//
+	kvm := make(map[string][]string)
+
 	for m := 0; m < nMap; m++ {
 		infile_name := reduceName(jobName, m, reduceTask) // generate the file name appropriate for the specific file
-		infile, err := ioutil.ReadFile(infile_name) // read it in. not sure if this is the right parser to use here
+		infile, err := os.Open(infile_name) // read it in. not sure if this is the right parser to use here
+		//defer infile.Close()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		variable := string(infile)
-		fmt.Println(variable) // print the readin file in string format
+		dec := json.NewDecoder(infile)
+		var keyv KeyValue
 
-	 	// need to sort files by key
+		for {
 
-		//result := reduceF(inFile, variable)
+			err := dec.Decode(&keyv)
+			if err != nil {
+				log.Fatal(err)
+			}
 
-		dec := json.NewDecoder(infile) // taking read data and decoding it from JSON
-		dencerr := dec.Decode(&kv) // ^^.Decode(&kv)
+			if _, good := kvm[keyv.Key]; good {
+				kvm[keyv.Key] = append(kvm[keyv.Key], keyv.Value)
+			} else {
+					kvm[keyv.Key] = []string{keyv.Value}
+			}
+		}
+	}
+	keys := make([]string, 0, len(kvm))
+	for k := range kvm {
+		keys = append(keys, k)
+	}
 
+	sort.Slice(keys, func(i, j int) bool {return keys[i] < keys[j]})
+
+	outFileHandle, err := os.Create(outFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	enc := json.NewEncoder(outFileHandle)
+
+	for _, key := range keys {
+		enc.Encode(KeyValue{key, reduceF(key, kvm[key])})
+	}
 }
-}
+	//variable := string(infile)
+	//fmt.Println(variable) // print the readin file in string format
+	//lm := len(infile)
+//
+// 	var vals [nmap]string
+// 	for f:= 0; f < lm; f++ {
+//
+// 		}
+//
+// 		type Message struct {
+// 			Key, Value
+// 		}
+//
+// 		for {
+// 			var m Message
+// 			if err := dec.Decode(&m); err == io.EOF {
+// 				break
+// 			} else if err != nil {
+// 				log.Fatal(err)
+// 			}
+// 			fmt.Printf("%v: %v\n", m.Key, m.Value)
+// 		}
+// 	}
+//
+// 	 	// need to sort files by key
+//
+// 		//result := reduceF(inFile, variable)
+//
+// 		//dec := json.NewDecoder(infile) // taking read data and decoding it from JSON
+// 		//dencerr := dec.Decode(&kv) // ^^.Decode(&kv)
+//
+// }
