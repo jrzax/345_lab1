@@ -6,6 +6,7 @@ import (
 	"log"
 	"encoding/json"
 	"sort"
+	"fmt"
 )
 
 func doReduce(
@@ -57,9 +58,10 @@ func doReduce(
 	for m := 0; m < nMap; m++ {
 		infile_name := reduceName(jobName, m, reduceTask) // generate the file name appropriate for the specific file
 		infile, err := os.Open(infile_name) // read it in. not sure if this is the right parser to use here
-		//defer infile.Close()
+		defer infile.Close()
 		if err != nil {
 			log.Fatal(err)
+			fmt.Println("opening issue")
 		}
 
 		dec := json.NewDecoder(infile)
@@ -69,7 +71,7 @@ func doReduce(
 
 			err := dec.Decode(&keyv)
 			if err != nil {
-				log.Fatal(err)
+				break
 			}
 
 			if _, good := kvm[keyv.Key]; good {
@@ -89,8 +91,9 @@ func doReduce(
 	outFileHandle, err := os.Create(outFile)
 	if err != nil {
 		log.Fatal(err)
+		fmt.Println("opening output issue")
 	}
-
+	defer outFileHandle.Close()
 	enc := json.NewEncoder(outFileHandle)
 
 	for _, key := range keys {
