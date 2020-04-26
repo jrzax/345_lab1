@@ -1,5 +1,13 @@
 package mapreduce
 
+import (
+	"hash/fnv"
+	"io/ioutil"
+	"log"
+	"decoding/json"
+	"fmt"
+)
+
 func doReduce(
 	jobName string, // the name of the whole MapReduce job
 	reduceTask int, // which reduce task this is
@@ -44,4 +52,22 @@ func doReduce(
 	//
 	// Your code here (Part I).
 	//
+	for m := 0; m < nMap; m++ {
+		infile_name := reduceName(jobName, m, reduceTask) // generate the file name appropriate for the specific file
+		infile, err := ioutil.ReadFile(infile_name) // read it in. not sure if this is the right parser to use here
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		variable := string(infile)
+		fmt.Println(variable) // print the readin file in string format
+
+	 	// need to sort files by key
+
+		//result := reduceF(inFile, variable)
+
+		dec := json.NewDecoder(infile) // taking read data and decoding it from JSON
+		dencerr := dec.Decode(&kv) // ^^.Decode(&kv)
+
+}
 }
