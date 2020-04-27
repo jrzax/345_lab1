@@ -3,7 +3,6 @@ package mapreduce
 import (
 	//"hash/fnv"
 	"os"
-	"log"
 	"encoding/json"
 	"sort"
 	"fmt"
@@ -60,7 +59,7 @@ func doReduce(
 		infile, err := os.Open(infile_name) // read it in. not sure if this is the right parser to use here
 		defer infile.Close()
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 			fmt.Println("opening issue")
 		}
 
@@ -90,7 +89,7 @@ func doReduce(
 
 	outFileHandle, err := os.Create(outFile)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 		fmt.Println("opening output issue")
 	}
 	defer outFileHandle.Close()
