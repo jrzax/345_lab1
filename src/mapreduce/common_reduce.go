@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"sort"
 	"fmt"
+	// "log"
 )
 
 func doReduce(
@@ -76,7 +77,7 @@ func doReduce(
 			if _, good := kvm[keyv.Key]; good {
 				kvm[keyv.Key] = append(kvm[keyv.Key], keyv.Value)
 			} else {
-					kvm[keyv.Key] = []string{keyv.Value}
+				kvm[keyv.Key] = []string{keyv.Value}
 			}
 		}
 	}

@@ -66,6 +66,14 @@ func doMap(
 	variable := string(content)
 	result := mapF(inFile, variable)
 
+	for i := 0; i < nReduce; i++ {
+		outfile := reduceName(jobName, mapTask, i)
+		file, err := os.Create(outfile)
+		if err != nil {
+			log.Println(err)
+		}
+		file.Close()
+	}
 	for _, kv := range result {
 		r := ihash(kv.Key) % nReduce
 		outfile := reduceName(jobName, mapTask, r)

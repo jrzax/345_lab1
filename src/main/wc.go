@@ -6,7 +6,7 @@ import (
 	"os"
 	"unicode"
 	"strconv"
-	"log"
+	// "log"
 )
 
 //
@@ -31,7 +31,6 @@ func mapF(filename string, contents string) []mapreduce.KeyValue {
 	}
 	for k, v := range kvm {
 		var temp = mapreduce.KeyValue{k, strconv.Itoa(v)}
-		log.Println(temp)
 		kvarr = append(kvarr, temp)
 	}
 	return kvarr
@@ -45,9 +44,12 @@ func mapF(filename string, contents string) []mapreduce.KeyValue {
 func reduceF(key string, values []string) string {
 	// Your code here (Part 1B).
 	var res int
-	for value := range values {
-		res = res + value
-
+	for _, value := range values {
+		ival, err := strconv.Atoi(value)
+		if err != nil {
+			panic(err)
+		}
+		res = res + ival
 	}
 	return strconv.Itoa(res)
 }
