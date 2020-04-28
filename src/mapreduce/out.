@@ -1,0 +1,24 @@
+2020/04/27 20:40:05 rpc.Register: method "CleanupFiles" has 1 input parameters; needs exactly three
+2020/04/27 20:40:05 rpc.Register: method "Lock" has 1 input parameters; needs exactly three
+2020/04/27 20:40:05 rpc.Register: method "Unlock" has 1 input parameters; needs exactly three
+2020/04/27 20:40:05 rpc.Register: method "Wait" has 1 input parameters; needs exactly three
+/var/tmp/824-501/mr63324-master: Starting Map/Reduce task test
+2020/04/27 20:40:05 rpc.Register: method "Lock" has 1 input parameters; needs exactly three
+2020/04/27 20:40:05 rpc.Register: method "Lock" has 1 input parameters; needs exactly three
+Schedule: 20 mapPhase tasks (10 I/Os)
+2020/04/27 20:40:05 rpc.Register: method "Unlock" has 1 input parameters; needs exactly three
+2020/04/27 20:40:05 rpc.Register: method "Unlock" has 1 input parameters; needs exactly three
+2020/04/27 20:40:05 0
+2020/04/27 20:40:05 824-mrinput-0.txt
+2020/04/27 20:40:05 /var/tmp/824-501/mr63324-worker1
+2020/04/27 20:40:05 1
+2020/04/27 20:40:05 824-mrinput-1.txt
+2020/04/27 20:40:05 /var/tmp/824-501/mr63324-worker0
+2020/04/27 20:40:05 2
+2020/04/27 20:40:05 824-mrinput-2.txt
+/var/tmp/824-501/mr63324-worker0: given mapPhase task #1 on file 824-mrinput-1.txt (nios: 10)
+/var/tmp/824-501/mr63324-worker1: given mapPhase task #0 on file 824-mrinput-0.txt (nios: 10)
+/var/tmp/824-501/mr63324-worker0: mapPhase task #1 done
+/var/tmp/824-501/mr63324-worker1: mapPhase task #0 done
+signal: interrupt
+FAIL	_/Users/jordanzax/NU/EECS_345/Mapreduce/src/mapreduce	28.790s
